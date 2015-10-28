@@ -18,13 +18,13 @@
             [lein-garden "0.2.6"]
             [lein-environ "1.0.1"]]
 
-  :source-paths ["src"]
+  :source-paths ["src/cljs"]
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
 
   :cljsbuild {
     :builds [{:id "dev"
-              :source-paths ["src"]
+              :source-paths ["src/cljs"]
 
               :figwheel { :on-jsload "sidequarter-frontend.core/on-js-reload" }
 
@@ -34,7 +34,7 @@
                          :output-dir "resources/public/js/compiled/out"
                          :source-map-timestamp true }}
              {:id "min"
-              :source-paths ["src"]
+              :source-paths ["src/cljs"]
               :compiler {:output-to "resources/public/js/compiled/sidequarter_frontend.js"
                          :main sidequarter-frontend.core
                          :optimizations :advanced

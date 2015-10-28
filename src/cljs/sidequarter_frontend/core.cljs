@@ -15,7 +15,7 @@
 
 (defn sidekiq-stats-view [data owner]
   (om/component
-   (dom/ul #js {:className "sidekiq-stats"}
+   (dom/ul #js {:className "sidekiq-stats h-list"}
            (dom/li nil (str "Busy: " (data :busy)))
            (dom/li nil (str "Enqueued: " (data :enqueued)))
            (dom/li nil (str "Scheduled: " (data :scheduled)))
@@ -33,7 +33,7 @@
           (om/update! data [:stats] stats))))
     om/IRender
     (render [_]
-      (dom/div #js {:className "sidekiq" :id (data :id)}
+      (dom/div #js {:className "sidekiq col s12 z-depth-2" :id (data :id)}
                (dom/h3 nil (data :application))
                (dom/p nil (data :namespace))
                (dom/p nil (data :redis_url))
@@ -54,8 +54,9 @@
           (om/update! data [:sidekiqs] (:sidekiqs response)))))
     om/IRender
     (render [_]
-      (dom/h1 nil "Sidekiqs")
-      (om/build sidekiq-list data))))
+      (dom/div #js {:className "row"}
+               (dom/h1 nil "Sidekiqs")
+               (om/build sidekiq-list data)))))
 
 (om/root
   (fn [data owner]
