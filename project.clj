@@ -22,6 +22,18 @@
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
 
+  :garden {:builds [{;; Optional name of the build:
+                     :id "screen"
+                     ;; Source paths where the stylesheet source code is
+                     :source-paths ["src/styles"]
+                     ;; The var containing your stylesheet
+                     :stylesheet sidequarter-frontend.styles/screen
+                     ;; Compiler flags passed to `garden.core/css'
+                     :compiler {;; Where to save the file
+                                :output-to "resources/public/css/screen.css"
+                                ;; Compress output
+                                :pretty-print? false}}]}
+
   :cljsbuild {
     :builds [{:id "dev"
               :source-paths ["src/cljs"]
