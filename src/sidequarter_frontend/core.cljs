@@ -13,12 +13,31 @@
 
 (defonce app-state (atom {}))
 
-(defn sidekiq-view [data owner]
+(defn sidekiq-stats-view [data owner]
   (om/component
-   (dom/div #js {:className "sidekiq" :id (data :id)}
-            (dom/h3 nil (data :namespace))
-            (dom/p nil (data :application))
-            (dom/p nil (data :redis_url)))))
+   (dom/ul #js {:className "sidekiq-stats"}
+           (dom/li nil (str "Busy: " (data :busy)))
+           (dom/li nil (str "Enqueued: " (data :enqueued)))
+           (dom/li nil (str "Scheduled: " (data :scheduled)))
+           (dom/li nil (str "Retries: " (data :retries)))
+           (dom/li nil (str "Failed: " (data :failed)))
+           (dom/li nil (str "Processed: " (data :processed))))))
+
+(defn sidekiq-view [data owner]
+  (reify
+    om/IWillMount
+    (will-mount [_]
+      (go
+        (let [response ((<! (api/get-stats (data :id))) :body)
+              stats (:stats response)]
+          (om/update! data [:stats] stats))))
+    om/IRender
+    (render [_]
+      (dom/div #js {:className "sidekiq" :id (data :id)}
+               (dom/h3 nil (data :application))
+               (dom/p nil (data :namespace))
+               (dom/p nil (data :redis_url))
+               (om/build sidekiq-stats-view (get data :stats {}))))))
 
 (defn sidekiq-list [data owner]
   (om/component
