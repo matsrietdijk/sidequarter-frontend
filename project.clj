@@ -9,11 +9,13 @@
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [environ "1.0.1"]
                  [sablono "0.3.6"]
+                 [garden "1.3.0-SNAPSHOT"]
                  [cljs-http "0.1.37"]
                  [org.omcljs/om "0.9.0"]]
 
   :plugins [[lein-cljsbuild "1.1.0"]
             [lein-figwheel "0.4.1"]
+            [lein-garden "0.2.6"]
             [lein-environ "1.0.1"]]
 
   :source-paths ["src"]
