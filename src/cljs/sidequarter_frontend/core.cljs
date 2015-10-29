@@ -23,6 +23,21 @@
            (dom/li nil (str "Failed: " (data :failed)))
            (dom/li nil (str "Processed: " (data :processed))))))
 
+(defn sidekiq-redis-view [data owner]
+  (om/component
+   (dom/ul #js {:className "sidekiq-redis-info"}
+           (dom/li nil
+                   (dom/strong nil "Namespace: ")
+                   (dom/span nil (data :namespace)))
+           (dom/li nil
+                   (dom/strong nil "Redis URL: ")
+                   (dom/span nil (data :redis_url))))))
+
+(defn sidekiq-read-more [data owner]
+  (om/component
+   (dom/a #js {:className "sidekiq-read-more" :id (data :id)}
+          (dom/i #js {:className "material-icons"} "expand_more"))))
+
 (defn sidekiq-view [data owner]
   (reify
     om/IWillMount
@@ -34,10 +49,15 @@
     om/IRender
     (render [_]
       (dom/div #js {:className "sidekiq col s12" :id (data :id)}
-               (dom/h3 nil (data :application))
-               (dom/p nil (data :namespace))
-               (dom/p nil (data :redis_url))
-               (om/build sidekiq-stats-view (get data :stats {}))))))
+               (dom/div #js {:className "row"}
+                        (dom/div #js {:className "col s12"}
+                                 (dom/h5 nil (data :application)))
+                        (dom/div #js {:className "col s4"}
+                                 (om/build sidekiq-redis-view data))
+                        (dom/div #js {:className "col s11"}
+                                 (om/build sidekiq-stats-view (get data :stats {})))
+                        (dom/div #js {:className "col s1"}
+                                 (om/build sidekiq-read-more data)))))))
 
 (defn sidekiq-list [data owner]
   (om/component
