@@ -1,6 +1,6 @@
 (ns sidequarter-frontend.styles
   (:require [garden.def :refer [defstylesheet defstyles defrule]]
-            [garden.units :refer [px]]))
+            [garden.units :refer [px pc]]))
 
 (defrule horizontal-list :ul.h-list)
 
@@ -12,8 +12,21 @@
    [:li
     {:display "inline"
      :margin-right (px 10)}])
-  [[:body
-    {:background-color "#00bcd4"}]
+  [[:filler
+    {:background-color "#FAFAFA"}]
+   [:#app
+    {:position "relative"
+     :z-index 5}]
+   [:.hover
+    {:position "relative"
+     :top (px -120)
+     :background-color "#FFFFFF"}]
+   [:.header
+    {:background-color "#00BCD4"
+     :top 0
+     :z-index 1
+     :height (px 240)
+     :width (pc 100)}]
    [:.sidekiq-list
-    [:.sidekiq
-     {:background-color "#fff"}]]])
+    {:padding [[0 (px 20)]]
+     :overflow "hidden"}]])

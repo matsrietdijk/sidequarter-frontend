@@ -33,7 +33,7 @@
           (om/update! data [:stats] stats))))
     om/IRender
     (render [_]
-      (dom/div #js {:className "sidekiq col s12 z-depth-2" :id (data :id)}
+      (dom/div #js {:className "sidekiq col s12" :id (data :id)}
                (dom/h3 nil (data :application))
                (dom/p nil (data :namespace))
                (dom/p nil (data :redis_url))
@@ -55,14 +55,14 @@
     om/IRender
     (render [_]
       (dom/div #js {:className "row"}
-               (dom/h1 nil "Sidekiqs")
                (om/build sidekiq-list data)))))
 
 (om/root
   (fn [data owner]
     (reify om/IRender
       (render [_]
-        (dom/div nil (om/build sidekiq-box data)))))
+        (dom/div #js {:className "container hover z-depth-2"}
+                 (om/build sidekiq-box data)))))
   app-state
   {:target (. js/document (getElementById "app"))})
 
