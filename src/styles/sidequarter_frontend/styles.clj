@@ -12,7 +12,7 @@
    [:li
     {:display "inline"
      :margin-right (px 10)}])
-  [[:filler
+  [[:.filler
     {:background-color "#FAFAFA"}]
    [:#app
     {:position "relative"
