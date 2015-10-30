@@ -14,14 +14,25 @@
 (defonce app-state (atom {}))
 
 (defn sidekiq-stats-view [data owner]
-  (om/component
-   (dom/ul #js {:className "sidekiq-stats h-list"}
-           (dom/li nil (str "Busy: " (data :busy)))
-           (dom/li nil (str "Enqueued: " (data :enqueued)))
-           (dom/li nil (str "Scheduled: " (data :scheduled)))
-           (dom/li nil (str "Retries: " (data :retries)))
-           (dom/li nil (str "Failed: " (data :failed)))
-           (dom/li nil (str "Processed: " (data :processed))))))
+  (reify
+    om/IInitState
+    (init-state [_]
+      {:stats {}})
+    om/IWillMount
+    (will-mount [_]
+      (go
+        (let [response ((<! (api/get-stats (data :id))) :body)
+              stats (:stats response)]
+          (om/set-state! owner :stats stats))))
+    om/IRenderState
+    (render-state [_ {:keys [stats]}]
+      (dom/ul #js {:className "sidekiq-stats h-list"}
+              (dom/li nil (str "Busy: " (stats :busy)))
+              (dom/li nil (str "Enqueued: " (stats :enqueued)))
+              (dom/li nil (str "Scheduled: " (stats :scheduled)))
+              (dom/li nil (str "Retries: " (stats :retries)))
+              (dom/li nil (str "Failed: " (stats :failed)))
+              (dom/li nil (str "Processed: " (stats :processed)))))))
 
 (defn sidekiq-redis-view [data owner]
   (om/component
@@ -40,12 +51,6 @@
 
 (defn sidekiq-view [data owner]
   (reify
-    om/IWillMount
-    (will-mount [_]
-      (go
-        (let [response ((<! (api/get-stats (data :id))) :body)
-              stats (:stats response)]
-          (om/update! data [:stats] stats))))
     om/IRender
     (render [_]
       (dom/div #js {:className "sidekiq col s12" :id (data :id)}
@@ -55,7 +60,7 @@
                         (dom/div #js {:className "col s4"}
                                  (om/build sidekiq-redis-view data))
                         (dom/div #js {:className "col s11"}
-                                 (om/build sidekiq-stats-view (get data :stats {})))
+                                 (om/build sidekiq-stats-view data))
                         (dom/div #js {:className "col s1"}
                                  (om/build sidekiq-read-more data)))))))
 
