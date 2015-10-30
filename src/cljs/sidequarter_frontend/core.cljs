@@ -55,6 +55,7 @@
     (render [_]
       (dom/div #js {:className "sidekiq col s12" :id (data :id)}
                (dom/div #js {:className "row"}
+                        (dom/div #js {:className (str "connectivity " (if (data :available) "green" "red"))})
                         (dom/div #js {:className "col s12"}
                                  (dom/h5 nil (data :application)))
                         (dom/div #js {:className "col s4"}

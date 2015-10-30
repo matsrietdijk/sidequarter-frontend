@@ -3,6 +3,7 @@
             [garden.units :refer [px pc]]))
 
 (defrule horizontal-list :ul.h-list)
+(defrule connectivity :div.connectivity)
 
 (defstyles screen
   (horizontal-list
@@ -12,6 +13,16 @@
    [:li
     {:display "inline"
      :margin-right (px 10)}])
+  (connectivity
+   {:position "absolute"
+    :bottom 0
+    :top 0
+    :right 0
+    :width (px 20)}
+   [:.green
+    {:background-color "#689F38"}]
+   [:.red
+    {:background-color "#E64A19"}])
   [[:.filler
     {:background-color "#FAFAFA"}]
    [:#app
