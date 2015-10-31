@@ -44,10 +44,45 @@
                    (dom/strong nil "Redis URL: ")
                    (dom/span nil (data :redis_url))))))
 
+(defn sidekiq-poll-stats [data owner]
+  (reify
+    om/IInitState
+    (init-state [_]
+      {:graph [] :interval-id nil})
+    om/IDidMount
+    (did-mount [_]
+      (let [interval-id
+            (js/setInterval
+             (fn []
+               (go
+                 (let [response ((<! (api/get-stats (data :id))) :body)
+                       stats (:stats response)]
+                   (om/update-state! owner [:graph] #(conj % stats))))
+               ) 2000)]
+        (om/set-state! owner [:interval-id] interval-id)))
+    om/IRenderState
+    (render-state [_ {:keys [graph]}]
+      (.log js/console (pr-str graph))
+      (dom/div #js {:className "col s12"}
+               (dom/h5 nil "Live stats")))
+    om/IWillUnmount
+    (will-unmount [_]
+      (js/clearInterval (om/get-state owner [:interval-id])))))
+
 (defn sidekiq-read-more [data owner]
-  (om/component
-   (dom/a #js {:className "sidekiq-read-more" :id (data :id)}
-          (dom/i #js {:className "material-icons"} "expand_more"))))
+  (reify
+    om/IInitState
+    (init-state [_]
+      {:polling false})
+    om/IRenderState
+    (render-state [_ {:keys [polling]}]
+      (dom/div nil
+               (dom/div #js {:className "col s1"}
+                        (dom/a #js {:onClick (fn [_] (om/set-state! owner :polling (not polling)))}
+                               (dom/i #js {:className "material-icons"} "expand_more")))
+               (if polling
+                 (om/build sidekiq-poll-stats data)
+                 (dom/div #js {:className "hidden"} nil))))))
 
 (defn sidekiq-view [data owner]
   (reify
@@ -62,8 +97,7 @@
                                  (om/build sidekiq-redis-view data))
                         (dom/div #js {:className "col s11"}
                                  (om/build sidekiq-stats-view data))
-                        (dom/div #js {:className "col s1"}
-                                 (om/build sidekiq-read-more data)))))))
+                        (om/build sidekiq-read-more data))))))
 
 (defn sidekiq-list [data owner]
   (om/component
