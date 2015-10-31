@@ -3,6 +3,7 @@
     (:require[om.core :as om :include-macros true]
              [om.dom :as dom :include-macros true]
              [cljs.core.async :refer [<!]]
+             [cljsjs.chart]
              [sidequarter-frontend.api :as api]))
 
 (enable-console-print!)
@@ -48,7 +49,7 @@
   (reify
     om/IInitState
     (init-state [_]
-      {:graph [] :interval-id nil})
+      {:graph [] :interval-id nil :graph-chart nil})
     om/IDidMount
     (did-mount [_]
       (let [interval-id
@@ -58,13 +59,23 @@
                  (let [response ((<! (api/get-stats (data :id))) :body)
                        stats (:stats response)]
                    (om/update-state! owner [:graph] #(conj % stats))))
-               ) 2000)]
+               ) 2000)
+            chart-ctx (. (. js/document (getElementById (str "graph-" (data :id)))) (getContext "2d"))
+            config #js {:type "line" :data #js {:labels #js [] :datasets #js []}}
+            graph-chart (js/Chart. chart-ctx config)]
+        (om/set-state! owner [:graph-chart] graph-chart)
         (om/set-state! owner [:interval-id] interval-id)))
     om/IRenderState
     (render-state [_ {:keys [graph]}]
-      (.log js/console (pr-str graph))
       (dom/div #js {:className "col s12"}
-               (dom/h5 nil "Live stats")))
+               (dom/h5 nil "Live stats")
+               (dom/canvas #js {:id (str "graph-" (data :id))
+                                :style #js {:width "90%" :height "350px"}} nil)))
+    om/IDidUpdate
+    (did-update [_ _ {:keys [graph-chart graph]}]
+      (if (empty? graph)
+        nil
+        nil)) ;; Update the graph with new stats
     om/IWillUnmount
     (will-unmount [_]
       (js/clearInterval (om/get-state owner [:interval-id])))))
