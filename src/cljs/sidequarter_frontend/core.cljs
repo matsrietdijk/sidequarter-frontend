@@ -17,7 +17,7 @@
   (reify
     om/IInitState
     (init-state [_]
-      {:stats {}})
+      {:stats { :busy 0 :enqueued 0 :scheduled 0 :retries 0 :failed 0 :processed 0}})
     om/IWillMount
     (will-mount [_]
       (go
