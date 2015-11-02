@@ -45,6 +45,13 @@
                    (dom/strong nil "Redis URL: ")
                    (dom/span nil (data :redis_url))))))
 
+(defn update-graph! [graph stats]
+  (let [last-stat (last stats)
+        data #js {:labels (clj->js (range (count stats)))
+                  :series (clj->js (apply map vector (map vals stats)))}]
+    (.log js/console data)
+    (. graph (update data #js {:lineSmooth (.none (.-Interpolation js/Chartist))}))))
+
 (defn sidekiq-poll-stats [data owner]
   (reify
     om/IInitState
@@ -70,10 +77,10 @@
                (dom/h5 nil "Live stats")
                (dom/div #js {:className "ct-chart ct-minor-seventh" :id (str "graph-" (data :id))} nil)))
     om/IDidUpdate
-    (did-update [_ _ {:keys [graph-chart graph]}]
+    (did-update [_ _ {:keys [graph]}]
       (if (empty? graph)
         nil
-        nil)) ;; Update the graph with new stats
+        (update-graph! (om/get-state owner [:graph-chart]) graph))) ;; Update the graph with new stats
     om/IWillUnmount
     (will-unmount [_]
       (js/clearInterval (om/get-state owner [:interval-id])))))
