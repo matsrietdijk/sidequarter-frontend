@@ -3,7 +3,7 @@
     (:require[om.core :as om :include-macros true]
              [om.dom :as dom :include-macros true]
              [cljs.core.async :refer [<!]]
-             [cljsjs.chart]
+             [cljsjs.chartist]
              [sidequarter-frontend.api :as api]))
 
 (enable-console-print!)
@@ -60,17 +60,15 @@
                        stats (:stats response)]
                    (om/update-state! owner [:graph] #(conj % stats))))
                ) 2000)
-            chart-ctx (. (. js/document (getElementById (str "graph-" (data :id)))) (getContext "2d"))
-            config #js {:type "line" :data #js {:labels #js [] :datasets #js []}}
-            graph-chart (js/Chart. chart-ctx config)]
+            g (.-Line js/Chartist)
+            graph-chart (g. (str "#graph-" (data :id)) #js{:labels #js["", ""], :series #js[#js[0 0 0 0 0 0] #js[0 0 0 0 0 0]]})]
         (om/set-state! owner [:graph-chart] graph-chart)
         (om/set-state! owner [:interval-id] interval-id)))
     om/IRenderState
     (render-state [_ {:keys [graph]}]
       (dom/div #js {:className "col s12"}
                (dom/h5 nil "Live stats")
-               (dom/canvas #js {:id (str "graph-" (data :id))
-                                :style #js {:width "90%" :height "350px"}} nil)))
+               (dom/div #js {:className "ct-chart ct-minor-seventh" :id (str "graph-" (data :id))} nil)))
     om/IDidUpdate
     (did-update [_ _ {:keys [graph-chart graph]}]
       (if (empty? graph)

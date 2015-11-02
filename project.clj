@@ -11,7 +11,8 @@
                  [sablono "0.3.6"]
                  [garden "1.3.0-SNAPSHOT"]
                  [cljs-http "0.1.37"]
-                 [org.omcljs/om "0.9.0"]]
+                 [org.omcljs/om "0.9.0"]
+                 [cljsjs/chartist "0.9.4-0"]]
 
   :plugins [[lein-cljsbuild "1.1.0"]
             [lein-figwheel "0.4.1"]
