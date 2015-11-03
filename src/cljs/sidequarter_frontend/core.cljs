@@ -46,8 +46,7 @@
                    (dom/span nil (data :redis_url))))))
 
 (defn update-graph! [graph stats]
-  (let [last-stat (last stats)
-        data #js {:labels (clj->js (range (count stats)))
+  (let [data #js {:labels (clj->js (range (count stats)))
                   :series (clj->js (apply map vector (map vals stats)))}]
     (.log js/console data)
     (. graph (update data #js {:lineSmooth (.none (.-Interpolation js/Chartist))}))))
