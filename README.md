@@ -1,39 +1,16 @@
-# sidequarter-frontend
+# Sidequarter Frontend
 
-FIXME: Write a one-line description of your library/project.
+A [React](https://facebook.github.io/react/) frontend for monitoring multiple [Sidekiq](http://sidekiq.org) instances by using the [Sidequarter API](https://github.com/matsrietdijk/sidequarter-api).
 
-## Overview
 
-FIXME: Write a paragraph about the library/project and highlight its goals.
+# Flow
 
-## Setup
+Within this project the following flow is used regarding version/source control:
 
-To get an interactive development environment run:
+- All changes are made and committed on a dedicated branch (except documentation changes)
+- Branches are categorized by prefixing the branch name, example: `feature/flow`
+- Pull Requests (PR) are used to merge changes into the `master` branch
 
-    lein figwheel
+The categories that are used in this project for branches are:
 
-and open your browser at [localhost:3449](http://localhost:3449/).
-This will auto compile and send all changes to the browser without the
-need to reload. After the compilation process is complete, you will
-get a Browser Connected REPL. An easy way to try it is:
-
-    (js/alert "Am I connected?")
-
-and you should see an alert in the browser window.
-
-To clean all compiled files:
-
-    lein clean
-
-To create a production build run:
-
-    lein cljsbuild once min
-
-And open your browser in `resources/public/index.html`. You will not
-get live reloading, nor a REPL. 
-
-## License
-
-Copyright © 2014 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.
+`feature`, `patch`, `update` and `release`
