@@ -45,22 +45,12 @@
                          :asset-path "js/compiled/out"
                          :output-to "resources/public/js/compiled/sidequarter_frontend.js"
                          :output-dir "resources/public/js/compiled/out"
-                         :foreign-libs [{:file "src/cljs/chart/chart.js"
-                                         :provides ["cljsjs.chart"]}]
-                         :externs ["src/cljs/chart/externs/chart.js"]
-                         :clojure-warnings {:externs-validations :off
-                                            :non-standard-jsdoc :off}
                          :source-map-timestamp true }}
              {:id "min"
               :source-paths ["src/cljs"]
               :compiler {:output-to "resources/public/js/compiled/sidequarter_frontend.js"
                          :main sidequarter-frontend.core
                          :optimizations :advanced
-                         :foreign-libs [{:file "src/cljs/chart/chart.min.js"
-                                         :provides ["cljsjs.chart"]}]
-                         :externs ["src/cljs/chart/externs/chart.js"]
-                         :clojure-warnings {:externs-validations :off
-                                            :non-standard-jsdoc :off}
                          :pretty-print false}}]}
 
   :figwheel {
