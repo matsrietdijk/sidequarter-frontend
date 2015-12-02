@@ -2,6 +2,10 @@
 
 A [React](https://facebook.github.io/react/) frontend for monitoring multiple [Sidekiq](http://sidekiq.org) instances by using the [Sidequarter API](https://github.com/matsrietdijk/sidequarter-api).
 
+## Code Status
+
+[![Dependency Status](https://www.versioneye.com/user/projects/565f5bbdf376cc003d0000e7/badge.svg)](https://www.versioneye.com/user/projects/565f5bbdf376cc003d0000e7)
+
 ## Flow
 
 Within this project the following flow is used regarding version/source control:
